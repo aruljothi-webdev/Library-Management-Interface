@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Management</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header>
+    <h1>📚 Library Management System</h1>
+    <p>Manage Books, Issues and Returns</p>
+</header>
+
+<div class="container">
+    <h2>Dashboard</h2>
+    <div class="cards">
+        <div>Total Copies: <b id="total">0</b></div>
+        <div>Available: <b id="available">0</b></div>
+        <div>Issued: <b id="issued">0</b></div>
+    </div>
+
+    <h2>Add Book</h2>
+    <input id="title" placeholder="Book Title">
+    <input id="author" placeholder="Author Name">
+    <input id="isbn" placeholder="ISBN Number">
+    <select id="category">
+        <option value="">Select Category</option>
+        <option>Computer Science</option>
+        <option>English</option>
+        <option>Science</option>
+        <option>Mathematics</option>
+        <option>General</option>
+    </select>
+    <input id="qty" type="number" min="1" step="1" placeholder="Quantity">
+    <button onclick="addBook()">Add Book</button>
+
+    <h2>Book Catalogue</h2>
+    <input id="search" placeholder="Search by title, author or ISBN" oninput="showBooks()">
+    <select id="filter" onchange="showBooks()">
+        <option value="All">All Books</option>
+        <option value="Available">Available</option>
+        <option value="Issued">Issued</option>
+    </select>
+
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th><th>Title</th><th>Author</th><th>ISBN</th>
+                    <th>Category</th><th>Total</th><th>Available</th><th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="bookList"></tbody>
+        </table>
+    </div>
+
+    <h2>Issue a Book</h2>
+    <input id="borrower" placeholder="Student Name">
+    <input id="issueId" type="number" min="1" placeholder="Book ID">
+    <label for="dueDate">Due date:</label>
+    <input id="dueDate" type="date">
+    <button onclick="issueBook()">Issue Book</button>
+
+    <h2>Issued Book Records</h2>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr><th>Student</th><th>Book</th><th>Issue Date</th><th>Due Date</th><th>Action</th></tr>
+            </thead>
+            <tbody id="issueList"></tbody>
+        </table>
+    </div>
+    <p class="note">Book records are saved in this browser using Local Storage.</p>
+</div>
+
+<footer><p>Library Management Interface | Web Development Project</p></footer>
+<script src="script.js"></script>
+</body>
+</html>

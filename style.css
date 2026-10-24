@@ -1,0 +1,126 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    background: #f2f7ff;
+    color: #333;
+}
+
+header {
+    background: #1769aa;
+    color: white;
+    text-align: center;
+    padding: 20px 12px;
+}
+
+header h1 {
+    margin: 0 0 8px;
+}
+
+header p {
+    margin: 0;
+}
+
+.container {
+    width: 92%;
+    max-width: 1200px;
+    margin: 25px auto;
+}
+
+h2 {
+    color: #1769aa;
+    margin-top: 30px;
+}
+
+.cards {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.cards div {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    flex: 1;
+    min-width: 150px;
+    box-shadow: 0 2px 5px #ddd;
+}
+
+input, select {
+    padding: 11px;
+    margin: 5px 4px 5px 0;
+    border: 1px solid #bbb;
+    border-radius: 5px;
+    max-width: 100%;
+    background: white;
+}
+
+button {
+    padding: 10px 14px;
+    background: #1769aa;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 4px 2px;
+}
+
+button:hover {
+    background: #0b4778;
+}
+
+button.danger {
+    background: #c0392b;
+}
+
+.table-wrap {
+    width: 100%;
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    margin-top: 12px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: center;
+}
+
+th {
+    background: #1769aa;
+    color: white;
+}
+
+.note {
+    color: #555;
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+footer {
+    background: #1769aa;
+    color: white;
+    text-align: center;
+    padding: 12px;
+    margin-top: 40px;
+}
+
+@media (max-width: 700px) {
+    .container {
+        width: 95%;
+    }
+
+    th, td {
+        padding: 7px;
+        font-size: 12px;
+    }
+}
