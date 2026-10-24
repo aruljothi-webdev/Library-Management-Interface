@@ -1,0 +1,180 @@
+let books = JSON.parse(localStorage.getItem("books")) || [];
+let records = JSON.parse(localStorage.getItem("records")) || [];
+
+let nextId = Math.max(0, ...books.map(b => b.id)) + 1;
+
+function save() {
+    localStorage.setItem("books", JSON.stringify(books));
+    localStorage.setItem("records", JSON.stringify(records));
+}
+
+function addBook() {
+    let title = document.getElementById("title").value.trim();
+    let author = document.getElementById("author").value.trim();
+    let isbn = document.getElementById("isbn").value.trim();
+    let category = document.getElementById("category").value;
+    let qty = Number(document.getElementById("qty").value);
+
+    if (!title || !author || !isbn || !category ||
+        !Number.isInteger(qty) || qty < 1) {
+        alert("Enter all book details correctly!");
+        return;
+    }
+
+    if (books.some(b => b.isbn === isbn)) {
+        alert("ISBN already exists!");
+        return;
+    }
+
+    books.push({
+        id: nextId++,
+        title, author, isbn, category,
+        qty, available: qty
+    });
+
+    save();
+    showBooks();
+}
+
+function showBooks() {
+    let search = document.getElementById("search").value.toLowerCase();
+    let filter = document.getElementById("filter").value;
+    let list = document.getElementById("bookList");
+
+    list.innerHTML = "";
+
+    let total = books.reduce((s, b) => s + b.qty, 0);
+    let available = books.reduce((s, b) => s + b.available, 0);
+
+    document.getElementById("total").textContent = total;
+    document.getElementById("available").textContent = available;
+    document.getElementById("issued").textContent = total - available;
+
+    books.filter(b =>
+        (b.title + b.author + b.isbn).toLowerCase().includes(search) &&
+        (filter === "All" ||
+        (filter === "Available" && b.available > 0) ||
+        (filter === "Issued" && b.available < b.qty))
+    ).forEach(b => {
+        list.innerHTML += `
+        <tr>
+            <td>${b.title}</td>
+            <td>${b.author}</td>
+            <td>${b.isbn}</td>
+            <td>${b.category}</td>
+            <td>${b.qty}</td>
+            <td>${b.available}</td>
+            <td>
+                <button onclick="editBook(${b.id})">Edit</button>
+                <button onclick="deleteBook(${b.id})">Delete</button>
+            </td>
+        </tr>`;
+    });
+
+    showRecords();
+}
+
+function editBook(id) {
+    let b = books.find(b => b.id === id);
+
+    let title = prompt("Book Title:", b.title);
+    if (title === null) return;
+
+    let author = prompt("Author:", b.author);
+    if (author === null) return;
+
+    let category = prompt("Category:", b.category);
+    if (category === null) return;
+
+    if (!title.trim() || !author.trim() || !category.trim()) {
+        alert("Fields cannot be empty!");
+        return;
+    }
+
+    b.title = title.trim();
+    b.author = author.trim();
+    b.category = category.trim();
+
+    save();
+    showBooks();
+}
+
+function deleteBook(id) {
+    if (records.some(r => r.bookId === id)) {
+        alert("Return issued books before deleting!");
+        return;
+    }
+
+    if (confirm("Delete this book?")) {
+        books = books.filter(b => b.id !== id);
+        save();
+        showBooks();
+    }
+}
+
+function issueBook() {
+    let name = document.getElementById("borrower").value.trim();
+    let id = Number(document.getElementById("issueId").value);
+    let due = document.getElementById("dueDate").value;
+
+    let b = books.find(b => b.id === id);
+
+    if (!name || !b || !due) {
+        alert("Enter valid student and book details!");
+        return;
+    }
+
+    if (b.available <= 0) {
+        alert("No copies available!");
+        return;
+    }
+
+    records.push({
+        student: name,
+        bookId: id,
+        bookTitle: b.title,
+        issueDate: new Date().toLocaleDateString(),
+        dueDate: due
+    });
+
+    b.available--;
+
+    save();
+    showBooks();
+
+    alert("Book issued successfully!");
+}
+
+function returnBook(index) {
+    let record = records[index];
+    let b = books.find(b => b.id === record.bookId);
+
+    if (b) b.available++;
+
+    records.splice(index, 1);
+
+    save();
+    showBooks();
+
+    alert("Book returned successfully!");
+}
+
+function showRecords() {
+    let list = document.getElementById("issueList");
+    list.innerHTML = "";
+
+    records.forEach((r, i) => {
+        list.innerHTML += `
+        <tr>
+            <td>${r.student}</td>
+            <td>${r.bookTitle} (ID: ${r.bookId})</td>
+            <td>${r.issueDate}</td>
+            <td>${r.dueDate}</td>
+            <td>
+                <button onclick="returnBook(${i})">Return</button>
+            </td>
+        </tr>`;
+    });
+}
+
+showBooks();
